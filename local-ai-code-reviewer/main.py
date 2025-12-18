@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from openai import OpenAI
 import requests
-
+from fastapi import Form, HTTPException
 
 client = OpenAI(
     base_url="http://localhost:11434/v1",  # Ollama local endpoint
@@ -29,3 +29,36 @@ app = FastAPI(
 @app.get("/")
 def home():
     return {"message": "Welcome to the Local AI Code Reviewer! Use POST /review to submit code."}
+
+
+@app.post("/review", response_model=CodeReviewResponse)
+async def review_code(
+    code: str = Form(...),
+    language: str = Form("python"),
+    model: str = Form("deepseek-coder-v2")  # Change to your pulled model
+):
+    if not code.strip():
+        raise HTTPException(status_code=400, detail="Code cannot be empty.")
+
+    system_prompt = (
+        f"You are an expert {language} code reviewer. "
+        "Analyze the code for bugs, performance issues, style problems, security risks, "
+        "and suggest concrete improvements. Be thorough but constructive."
+    )
+
+    try:
+        response = client.chat.completions.create(
+            model=model,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": code}
+            ],
+            max_tokens=1500,
+            temperature=0.5   # ??
+        )
+        review = response.choices[0].message.content.strip()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"AI review failed: {str(e)}")
+
+    return CodeReviewResponse(review=review)
+
