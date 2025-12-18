@@ -43,3 +43,12 @@
    - Why neat: Starts simple but scales to show full-stack skills with AI enhancements.
 
 These are scalable—start small (core API + basic agent) and iterate. Most can be deployed easily (e.g., via Docker + Vercel/Heroku). Check Pydantic AI docs for TemporalAgent examples, and FastAPI's release notes for the latest features. Which one sparks your interest, or want more details on any? 🚀
+
+
+#### Youtube Channel With Recorded Coding Sessions Serving As Proof.
+
+- https://www.youtube.com/playlist?list=PLl5BCUx-PobaEZXBpxXfIgMy6koiy1J9D
+
+### Alternative would be Google Drive / Dropbox if Youtube causes problems
+
+
